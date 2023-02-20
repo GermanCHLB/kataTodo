@@ -4,12 +4,8 @@ import Task from "./Task";
 
 export default class TaskList extends Component {
 
-    state = {
-        tasks: this.props.tasks,
-    }
-
     render() {
-        const elements = this.state.tasks.map(el => {
+        const elements = this.props.tasks.map(el => {
             const {id, ...itemProps} = el;
             return (
                 <Task

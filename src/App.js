@@ -46,7 +46,7 @@ export default class App extends Component{
     addTask = (description) => {
         this.setState({
             tasks: [
-                ...this.state.tasks,
+                ...this.state.tasks, 
                 {id: Date.now(), description: description, status: 'active', createDate: Date.now()}
             ]
         })

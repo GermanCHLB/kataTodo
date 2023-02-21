@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import TaskFilter from './TaskFilter';
+import TaskFilter from './TaskFilter'
 
 const Footer = ({ leftCount, activeTab, changeTab, clearCompleted }) => {
   return (
@@ -11,7 +11,7 @@ const Footer = ({ leftCount, activeTab, changeTab, clearCompleted }) => {
         Clear completed
       </button>
     </footer>
-  );
+  )
 }
 
 export default Footer

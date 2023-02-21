@@ -19,7 +19,7 @@ const TaskFilter = ({ activeTab, changeTab }) => {
         </button>
       </li>
     </ul>
-  );
+  )
 }
 
 export default TaskFilter

@@ -1,16 +1,31 @@
 import React from 'react';
 
-const TaskFilter = () => {
+const TaskFilter = ({activeTab, changeTab}) => {
     return (
         <ul className="filters">
             <li>
-                <button className="selected">All</button>
+                <button
+                    className={activeTab === 'all' ? 'selected' : ''}
+                    onClick={() => changeTab('all')}
+                >
+                    All
+                </button>
             </li>
             <li>
-                <button>Active</button>
+                <button
+                    className={activeTab === 'active' ? 'selected' : ''}
+                    onClick={() => changeTab('active')}
+                >
+                    Active
+                </button>
             </li>
             <li>
-                <button>Completed</button>
+                <button
+                    className={activeTab === 'completed' ? 'selected' : ''}
+                    onClick={() => changeTab('completed')}
+                >
+                    Completed
+                </button>
             </li>
         </ul>
     );

@@ -11,7 +11,9 @@ export default class App extends Component{
             {id: 1, description: '1', status: 'editing'},
             {id: 2, description: '2', status: 'completed'},
             {id: 3, description: '3', status: 'active'},
-        ]
+        ],
+
+        activeTab: 'all',
     }
 
     deleteItem = (id) => {
@@ -41,16 +43,40 @@ export default class App extends Component{
         })
     }
 
+    addTask = (description) => {
+        this.setState({
+            tasks: [...this.state.tasks, {id: Date.now(), description: description, status: 'active'}]
+        })
+    }
+
+    changeTab = (newTab) => {
+        this.setState({activeTab: newTab});
+    }
+
+    clearCompleted = () => {
+        this.setState({tasks: this.state.tasks.filter(el => el.status !== 'completed')})
+    }
+
     render() {
+        const leftCount = this.state.tasks.filter(el => el.status === 'active').length;
+
         return (
             <section className="todoapp">
-                <NewTaskForm/>
+                <NewTaskForm addTask={(value) => this.addTask(value)}/>
                 <TaskList
-                    tasks={this.state.tasks}
+                    tasks={
+                    this.state.activeTab === 'all'
+                        ? this.state.tasks
+                        : this.state.tasks.filter(el => el.status === this.state.activeTab)}
                     onDelete={(id) => this.deleteItem(id)}
                     onChangeStatus={(id) => this.changeStatus(id)}
                 />
-                <Footer/>
+                <Footer
+                    leftCount={leftCount}
+                    activeTab={this.state.activeTab}
+                    changeTab={(newTab) => this.changeTab(newTab)}
+                    clearCompleted={this.clearCompleted}
+                />
             </section>
         );
     }

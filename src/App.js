@@ -23,7 +23,6 @@ export default class App extends Component{
     }
 
     changeStatus = (id) => {
-        console.log(this.state)
         this.setState(() => {
             return {
                 tasks: this.state.tasks.map(el => {

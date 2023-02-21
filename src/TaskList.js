@@ -12,7 +12,9 @@ export default class TaskList extends Component {
                     key={id}
                     {...itemProps}
                     onDelete = {() => this.props.onDelete(id)}
-                    onChangeStatus ={() => this.props.onChangeStatus(id)}
+                    onChangeStatus = {() => this.props.onChangeStatus(id)}
+                    onChangeDescription = {(newDescription) => this.props.onChangeDescription(id, newDescription)}
+                    onEdit = {() => this.props.onEdit(id)}
                 />
             )
         })

@@ -16,6 +16,13 @@ export default class Task extends Component {
     createDate: PropTypes.number,
   }
   render() {
+    let timer = ' ' + this.props.minutes + ':'
+    if (String(this.props.seconds).length === 1) {
+      timer += '0' + this.props.seconds
+    } else {
+      timer += this.props.seconds
+    }
+
     return (
       <li className={this.props.status}>
         <div className="view">
@@ -26,8 +33,25 @@ export default class Task extends Component {
             checked={this.props.status === 'completed'}
           />
           <label onClick={this.props.onChangeStatus}>
-            <span className="description">{this.props.description}</span>
-            <span className="created">
+            <span className="title">{this.props.description}</span>
+            <span className="description">
+              <button
+                className="icon icon-play"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  this.props.startTimer()
+                }}
+              />
+              <button
+                className="icon icon-pause"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  this.props.pauseTimer()
+                }}
+              />
+              {timer}
+            </span>
+            <span className="description">
               {'created ' + formatDistanceToNow(this.props.createDate, { includeSeconds: true }) + ' ago'}
             </span>
           </label>

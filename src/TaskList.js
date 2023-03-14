@@ -1,23 +1,25 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 import Task from './Task'
 
-export default class TaskList extends Component {
-  render() {
-    const elements = this.props.tasks.map((el) => {
-      const { id, ...itemProps } = el
-      return (
-        <Task
-          key={id}
-          {...itemProps}
-          onDelete={() => this.props.onDelete(id)}
-          onChangeStatus={() => this.props.onChangeStatus(id)}
-          onChangeDescription={(newDescription) => this.props.onChangeDescription(id, newDescription)}
-          onEdit={() => this.props.onEdit(id)}
-        />
-      )
-    })
+const TaskList = ({ tasks, onChangeDescription, onChangeStatus, onEdit, onDelete, startTimer, pauseTimer }) => {
+  const elements = tasks.map((el) => {
+    const { id, ...itemProps } = el
+    return (
+      <Task
+        key={id}
+        {...itemProps}
+        onDelete={() => onDelete(id)}
+        onChangeStatus={() => onChangeStatus(id)}
+        onChangeDescription={(newDescription) => onChangeDescription(id, newDescription)}
+        onEdit={() => onEdit(id)}
+        pauseTimer={() => pauseTimer(id)}
+        startTimer={() => startTimer(id)}
+      />
+    )
+  })
 
-    return <ul className="todo-list">{elements}</ul>
-  }
+  return <ul className="todo-list">{elements}</ul>
 }
+
+export default TaskList

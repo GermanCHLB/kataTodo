@@ -1,111 +1,98 @@
 import './App.css'
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 
 import TaskList from './TaskList'
 import NewTaskForm from './NewTaskForm'
 import Footer from './Footer'
 
-export default class App extends Component {
-  state = {
-    tasks: [
-      { id: 1, description: '1', status: 'active', createDate: Date.now(), minutes: 12, seconds: 25, isPaused: false },
-      {
-        id: 2,
-        description: '2',
-        status: 'completed',
-        createDate: Date.now(),
-        minutes: 12,
-        seconds: 25,
-        isPaused: true,
-      },
-      { id: 3, description: '3', status: 'active', createDate: Date.now(), minutes: 12, seconds: 25, isPaused: false },
-    ],
+const App = () => {
+  const [tasks, setTasks] = useState([
+    { id: 1, description: '1', status: 'active', createDate: Date.now(), minutes: 12, seconds: 25, isPaused: false },
+    {
+      id: 2,
+      description: '2',
+      status: 'completed',
+      createDate: Date.now(),
+      minutes: 12,
+      seconds: 25,
+      isPaused: true,
+    },
+    { id: 3, description: '3', status: 'active', createDate: Date.now(), minutes: 12, seconds: 25, isPaused: false },
+  ])
 
-    activeTab: 'all',
+  const [activeTab, setActiveTab] = useState('all')
+
+  const deleteItem = (id) => {
+    setTasks(tasks.filter((el) => id !== el.id))
   }
 
-  deleteItem = (id) => {
-    this.setState(() => {
-      return {
-        tasks: this.state.tasks.filter((el) => id !== el.id),
-      }
-    })
-  }
-
-  changeStatus = (id) => {
-    this.setState(() => {
-      return {
-        tasks: this.state.tasks.map((el) => {
-          if (el.id !== id) {
-            return el
+  const changeStatus = (id) => {
+    setTasks(
+      tasks.map((el) => {
+        if (el.id !== id) {
+          return el
+        } else {
+          if (el.status === 'active') {
+            el.status = 'completed'
+            el.isPaused = true
           } else {
-            if (el.status === 'active') {
-              el.status = 'completed'
-              el.isPaused = true
-            } else {
-              el.status = 'active'
-              el.isPaused = false
-            }
-            return el
-          }
-        }),
-      }
-    })
-  }
-
-  addTask = (description, minutes, seconds) => {
-    console.log(minutes, seconds)
-    this.setState({
-      tasks: [
-        ...this.state.tasks,
-        {
-          id: Date.now(),
-          description: description,
-          status: 'active',
-          createDate: Date.now(),
-          minutes: minutes,
-          seconds: seconds,
-        },
-      ],
-    })
-  }
-
-  changeTab = (newTab) => {
-    this.setState({ activeTab: newTab })
-  }
-
-  clearCompleted = () => {
-    this.setState({ tasks: this.state.tasks.filter((el) => el.status !== 'completed') })
-  }
-
-  changeDescription = (id, newDescription) => {
-    this.setState(() => {
-      return {
-        tasks: this.state.tasks.map((el) => {
-          if (el.id === id) {
             el.status = 'active'
-            el.description = newDescription
+            el.isPaused = false
           }
           return el
-        }),
-      }
-    })
+        }
+      })
+    )
   }
 
-  onEdit = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((el) => {
+  const addTask = (description, minutes, seconds) => {
+    setTasks([
+      ...tasks,
+      {
+        id: Date.now(),
+        description: description,
+        status: 'active',
+        createDate: Date.now(),
+        minutes: Number(minutes),
+        seconds: Number(seconds),
+      },
+    ])
+  }
+
+  const changeTab = (newTab) => {
+    setActiveTab(newTab)
+  }
+
+  const clearCompleted = () => {
+    setTasks(tasks.filter((el) => el.status !== 'completed'))
+  }
+
+  const changeDescription = (id, newDescription) => {
+    setTasks(
+      tasks.map((el) => {
+        if (el.id === id) {
+          el.status = 'active'
+          el.description = newDescription
+        }
+        return el
+      })
+    )
+  }
+
+  const onEdit = (id) => {
+    setTasks(
+      tasks.map((el) => {
         if (el.id === id) {
           el.status = 'editing'
         }
         return el
-      }),
-    })
+      })
+    )
   }
 
-  updateTimers = () => {
-    this.setState({
-      tasks: this.state.tasks.map((el) => {
+  const updateTimers = () => {
+    setTasks(
+      tasks.map((el) => {
         let time = el.minutes * 60 + el.seconds
         if (!el.isPaused) {
           time += 1
@@ -113,66 +100,60 @@ export default class App extends Component {
         el.minutes = Math.floor(time / 60)
         el.seconds = time % 60
         return el
-      }),
-    })
+      })
+    )
   }
 
-  pauseTimer = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((el) => {
+  const pauseTimer = (id) => {
+    setTasks(
+      tasks.map((el) => {
         if (el.id === id) {
           el.isPaused = true
         }
         return el
-      }),
-    })
+      })
+    )
   }
 
-  startTimer = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((el) => {
+  const startTimer = (id) => {
+    setTasks(
+      tasks.map((el) => {
         if (el.id === id) {
           el.isPaused = false
         }
         return el
-      }),
-    })
-  }
-
-  componentDidMount() {
-    this.timer = setInterval(this.updateTimers, 1000)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer)
-  }
-
-  render() {
-    const leftCount = this.state.tasks.filter((el) => el.status === 'active').length
-
-    return (
-      <section className="todoapp">
-        <NewTaskForm addTask={(...values) => this.addTask(...values)} />
-        <TaskList
-          tasks={
-            this.state.activeTab === 'all'
-              ? this.state.tasks
-              : this.state.tasks.filter((el) => el.status === this.state.activeTab)
-          }
-          onDelete={(id) => this.deleteItem(id)}
-          onChangeStatus={(id) => this.changeStatus(id)}
-          onChangeDescription={(id, newDescription) => this.changeDescription(id, newDescription)}
-          onEdit={(id) => this.onEdit(id)}
-          pauseTimer={(id) => this.pauseTimer(id)}
-          startTimer={(id) => this.startTimer(id)}
-        />
-        <Footer
-          leftCount={leftCount}
-          activeTab={this.state.activeTab}
-          changeTab={(newTab) => this.changeTab(newTab)}
-          clearCompleted={this.clearCompleted}
-        />
-      </section>
+      })
     )
   }
+
+  useEffect(() => {
+    const timer = setInterval(updateTimers, 1000)
+
+    return () => clearInterval(timer)
+  })
+
+  const leftCount = tasks.filter((el) => el.status === 'active').length
+
+  return (
+    <section className="todoapp">
+      <NewTaskForm addTask={(...values) => addTask(...values)} />
+      <TaskList
+        tasks={activeTab === 'all' ? tasks : tasks.filter((el) => el.status === activeTab)}
+        onDelete={(id) => deleteItem(id)}
+        onChangeStatus={(id) => changeStatus(id)}
+        onChangeDescription={(id, newDescription) => changeDescription(id, newDescription)}
+        onEdit={(id) => onEdit(id)}
+        pauseTimer={(id) => pauseTimer(id)}
+        startTimer={(id) => startTimer(id)}
+      />
+      <Footer
+        leftCount={leftCount}
+        activeTab={activeTab}
+        changeTab={(newTab) => changeTab(newTab)}
+        clearCompleted={clearCompleted}
+      />
+    </section>
+  )
 }
+
+export default App

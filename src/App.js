@@ -63,8 +63,8 @@ export default class App extends Component {
           description: description,
           status: 'active',
           createDate: Date.now(),
-          minutes: minutes,
-          seconds: seconds,
+          minutes: Number(minutes),
+          seconds: Number(seconds),
         },
       ],
     })
